@@ -54,7 +54,23 @@
 
   <section class="role-section">
     <div class="section-head"><div><p class="eyebrow">CHOOSE YOUR MODE</p><h2>Student, Teacher or Computer</h2></div></div>
-    <div id="roleGrid" class="role-grid"></div>
+    <div id="roleGrid" class="role-grid">
+      <a class="role-card" href="student-save.html">
+        <img src="../assets/roles/student.svg" alt="Student">
+        <div><h3>Student</h3><p>প্রশ্ন অনুশীলন ও ফলাফল দেখো</p></div>
+        <span>→</span>
+      </a>
+      <a class="role-card" href="teacher-save.html">
+        <img src="../assets/roles/teacher.svg" alt="Teacher">
+        <div><h3>Teacher</h3><p>প্রশ্ন তৈরি ও পরিচালনা করো</p></div>
+        <span>→</span>
+      </a>
+      <a class="role-card" href="computer.html">
+        <img src="../assets/roles/computer.svg" alt="Computer">
+        <div><h3>Computer</h3><p>Computer-based practice ও exam</p></div>
+        <span>→</span>
+      </a>
+    </div>
   </section>
 
   <div class="search-wrap">
@@ -87,7 +103,7 @@ function applyTheme(){
 }
 
 function roleTarget(id){
-  return id==='teacher'?'teacher-save.html':id==='computer'?'computer-save.html':'student-save.html';
+  return id==='teacher'?'teacher-save.html':id==='computer'?'computer.html':'student-save.html';
 }
 
 function escapeHtml(s){
@@ -105,7 +121,8 @@ function params(){ return new URLSearchParams(location.search); }
 async function initRoles(){
   const grid=document.getElementById('roleGrid');
   if(!grid) return;
-  const roles=await loadJSON('../data/roles.json');
+  let roles;
+  try { roles=await loadJSON('../data/roles.json'); } catch(e) { return; }
   const html=roles.map(r=>`
     <button class="role-card" data-role="${r.id}" type="button">
       <img src="../${r.image}" alt="${escapeHtml(r.name)}">
@@ -194,8 +211,22 @@ const classGrid=document.getElementById('classGrid');
 const searchInput=document.getElementById('searchInput');
 let classesData=[];
 const icons=['📘','📗','📙','📕','🎓','📚','📒','🧮'];
+const FALLBACK_CLASSES=[
+ {id:'class5',name:'Class 5',subjects:['bangla','english','physics','life-science','mathematics','geography','history']},
+ {id:'class6',name:'Class 6',subjects:['bangla','english','physics','life-science','mathematics','geography','history']},
+ {id:'class7',name:'Class 7',subjects:['bangla','english','physics','life-science','mathematics','geography','history']},
+ {id:'class8',name:'Class 8',subjects:['bangla','english','physics','life-science','mathematics','geography','history']},
+ {id:'class9',name:'Class 9',subjects:['bangla','english','physics','life-science','mathematics','geography','history']},
+ {id:'class10',name:'Class 10',subjects:['bangla','english','physics','life-science','mathematics','geography','history']},
+ {id:'class11-science',name:'Class 11 Science',subjects:['bangla','english','physics','life-science','mathematics','computer-science']},
+ {id:'class12-science',name:'Class 12 Science',subjects:['bangla','english','physics','life-science','mathematics','computer-science']},
+ {id:'class11-commerce',name:'Class 11 Commerce',subjects:['accountancy','commercial-law','cost-tax','business-studies']},
+ {id:'class12-commerce',name:'Class 12 Commerce',subjects:['accountancy','commercial-law','cost-tax','business-studies']},
+ {id:'class11-arts',name:'Class 11 Arts',subjects:['bangla','english','geography','history','political-science','রাষ্ট্রবিজ্ঞান']},
+ {id:'class12-arts',name:'Class 12 Arts',subjects:['bangla','english','geography','history','political-science','রাষ্ট্রবিজ্ঞান']}
+];
 async function initHome(){
- classesData=await loadJSON('../data/classes.json');
+ try { classesData=await loadJSON('../data/classes.json'); } catch(e) { classesData=FALLBACK_CLASSES; }
  render(classesData);
  searchInput?.addEventListener('input',()=>{const q=searchInput.value.toLowerCase().trim();render(classesData.filter(c=>(c.name+' '+c.id+' '+c.subjects.join(' ')).toLowerCase().includes(q)));});
 }
